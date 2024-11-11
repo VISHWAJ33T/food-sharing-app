@@ -11,35 +11,49 @@ datasource db {
 }
 
 model User {
-  // id        String   @id @default(cuid())
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String
-  username  String   @unique
-  email     String   @unique
-  phone     String
-  address   String
-  aadharNo  String   @unique
-  password  String
-  userType  UserType
-  dishes    Dish[]
+  id             String         @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  username       String         @unique
+  email          String         @unique
+  phone          String
+  address        String
+  aadharNo       String         @unique
+  password       String
+  userType       String         @default("SEEKER")
+  emailVerified  DateTime?
+  image          String?
+  hashedPassword String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  suppliedDishes Dish[]         @relation("SuppliedDishes")
+  claimRequests  ClaimRequest[]
 }
 
 model Dish {
-  // id        String   @id @default(cuid())
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
   name          String
   servings      Int
-  type          DishType
-  description   String?
+  type          String
+  description   String
   imageUrl      String?
   pickupAddress String
-  claimed       Boolean
-  supplier      User     @relation(fields: [supplierId], references: [id])
-  supplierId    String   @db.ObjectId
+  claimed       Boolean        @default(false)
+  supplierId    String         @db.ObjectId
+  supplier      User           @relation("SuppliedDishes", fields: [supplierId], references: [id])
+  claimRequests ClaimRequest[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model ClaimRequest {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  dishId    String   @db.ObjectId
+  dish      Dish     @relation(fields: [dishId], references: [id])
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  status    String   @default("PENDING") // Can be "PENDING", "APPROVED", or "REJECTED"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum UserType {
