@@ -1,7 +1,14 @@
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth/next'
+import { v2 as cloudinary } from 'cloudinary'
 import { prisma } from '@/prisma/prisma'
 import { authOptions } from '../../auth/[...nextauth]/route'
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+})
 
 export async function GET(
   request: Request,
@@ -10,7 +17,25 @@ export async function GET(
   try {
     const dish = await prisma.dish.findUnique({
       where: { id: params.id },
-      include: { supplier: true },
+      include: {
+        supplier: {
+          select: {
+            id: true,
+            name: true,
+            phone: true,
+            address: true
+          }
+        },
+        claimRequests: {
+          include: {
+            user: {
+              select: {
+                name: true
+              }
+            }
+          }
+        }
+      },
     })
 
     if (!dish) {
@@ -47,14 +72,34 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const body = await request.json()
+    const formData = await request.formData()
+    const name = formData.get('name') as string
+    const servings = parseInt(formData.get('servings') as string)
+    const type = formData.get('type') as 'VEG' | 'NON_VEG'
+    const description = formData.get('description') as string
+    const image = formData.get('image') as File | null
+
+    let imageUrl = dish.imageUrl
+    if (image) {
+      const arrayBuffer = await image.arrayBuffer()
+      const buffer = Buffer.from(arrayBuffer)
+      const result = await new Promise((resolve, reject) => {
+        cloudinary.uploader.upload_stream((error, result) => {
+          if (error) reject(error)
+          else resolve(result)
+        }).end(buffer)
+      })
+      imageUrl = (result as any).secure_url
+    }
+
     const updatedDish = await prisma.dish.update({
       where: { id: params.id },
       data: {
-        name: body.name,
-        servings: body.servings,
-        type: body.type,
-        description: body.description,
+        name,
+        servings,
+        type,
+        description,
+        imageUrl,
       },
     })
 
