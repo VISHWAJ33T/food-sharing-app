@@ -21,6 +21,7 @@ interface Dish {
   description: string
   imageUrl: string | null
   pickupAddress: string
+  createdAt: string
   supplier: {
     name: string
     address: string
@@ -59,30 +60,31 @@ export default function DishDetails({ params }: { params: { id: string } }) {
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-b from-green-100 to-green-200 p-4'>
-      <Card className='mx-auto max-w-2xl'>
+    <div className="min-h-screen bg-gradient-to-b from-green-100 to-green-200 p-4">
+      <Card className="mx-auto max-w-2xl">
         <CardHeader>
-          <div className='relative mb-4 h-64 w-full'>
+          <div className="relative mb-4 h-64 w-full">
             <Image
               src={dish.imageUrl || '/placeholder.svg?height=256&width=512'}
               alt={dish.name}
-              layout='fill'
-              objectFit='cover'
-              className='rounded-t-lg'
+              layout="fill"
+              objectFit="cover"
+              className="rounded-t-lg"
             />
           </div>
-          <CardTitle className='text-2xl font-bold text-green-800'>
+          <CardTitle className="text-2xl font-bold text-green-800">
             {dish.name}
           </CardTitle>
           <CardDescription>Serves {dish.servings} people</CardDescription>
+          <p className="text-sm text-gray-500">Posted: {new Date(dish.createdAt).toLocaleString()}</p>
         </CardHeader>
-        <CardContent className='space-y-4'>
+        <CardContent className="space-y-4">
           <Badge variant={dish.type === 'VEG' ? 'default' : 'destructive'}>
             {dish.type === 'VEG' ? 'Vegetarian' : 'Non-Vegetarian'}
           </Badge>
-          <p className='text-gray-600'>{dish.description}</p>
-          <div className='border-t pt-4'>
-            <h3 className='mb-2 text-lg font-semibold'>Supplier Details</h3>
+          <p className="text-gray-600">{dish.description}</p>
+          <div className="border-t pt-4">
+            <h3 className="mb-2 text-lg font-semibold">Supplier Details</h3>
             <p>
               <strong>Name:</strong> {dish.supplier.name}
             </p>
@@ -95,7 +97,7 @@ export default function DishDetails({ params }: { params: { id: string } }) {
             </p>
           </div>
           <Button
-            className='w-full bg-green-500 text-white hover:bg-green-600'
+            className="w-full bg-green-500 text-white hover:bg-green-600"
             onClick={() => router.push('/feed')}
           >
             Back to Feed
