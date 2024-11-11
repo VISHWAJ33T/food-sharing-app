@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useSession } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -11,6 +12,13 @@ import { toast } from '@/hooks/use-toast'
 export default function Register() {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const { data: session, status } = useSession()
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      router.push('/feed')
+    }
+  }, [status, router])
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -42,6 +50,14 @@ export default function Register() {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  if (status === 'loading') {
+    return <div>Loading...</div>
+  }
+
+  if (status === 'authenticated') {
+    return null
   }
 
   return (
@@ -87,6 +103,14 @@ export default function Register() {
             {isLoading ? 'Registering...' : 'Register'}
           </Button>
         </form>
+        <div className="mt-4 text-center">
+          <p className="text-sm text-gray-600">
+            Already have an account?{' '}
+            <Link href="/login" className="text-green-600 hover:underline">
+              Login here
+            </Link>
+          </p>
+        </div>
         <div className='mt-4 text-center'>
           <Link href='/' className='text-green-600 hover:underline'>
             Back to Home
