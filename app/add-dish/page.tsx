@@ -11,46 +11,18 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { toast } from '@/hooks/use-toast'
 import { useSession } from 'next-auth/react'
 
-export default function AddDishe() {
+export default function AddDish() {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [useDefaultAddress, setUseDefaultAddress] = useState(true)
-  const [imageUrl, setImageUrl] = useState('')
-  const [isUploadingImage, setIsUploadingImage] = useState(false)
+  const [imageFile, setImageFile] = useState<File | null>(null)
   const { data: session } = useSession()
-
-  const uploadImage = async (file: File) => {
-    setIsUploadingImage(true)
-    const data = new FormData()
-    data.append('file', file)
-    data.append('upload_preset', 'gupta-crockery')
-    // data.append("upload_preset", "food-sharing-app")
-    data.append('cloud_name', 'dywvrv8nw')
-
-    try {
-      const response = await fetch(
-        'https://api.cloudinary.com/v1_1/dywvrv8nw/image/upload',
-        {
-          method: 'post',
-          body: data
-        }
-      )
-      const responseData = await response.json()
-      setImageUrl(responseData.url.toString())
-      toast({ title: 'Image uploaded successfully!' })
-    } catch (error) {
-      console.error('Error uploading image:', error)
-      toast({ title: 'Error uploading image', variant: 'destructive' })
-    } finally {
-      setIsUploadingImage(false)
-    }
-  }
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
       if (file.type === 'image/jpeg' || file.type === 'image/png') {
-        uploadImage(file)
+        setImageFile(file)
       } else {
         toast({
           title: 'Please select a JPEG or PNG image',
@@ -63,25 +35,18 @@ export default function AddDishe() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setIsSubmitting(true)
-    console.log('session', session)
 
     const formData = new FormData(event.currentTarget)
-    const data = Object.fromEntries(formData.entries())
-
-    // Add the image URL to the data
-    data.imageUrl = imageUrl
-    data.pickupAddress = useDefaultAddress
-      ? (session?.user as any)?.address as string
-      : data.pickupAddress
-    data.supplierId = (session?.user as any)?.id as string
+    if (imageFile) {
+      formData.append('image', imageFile)
+    }
+    formData.append('pickupAddress', useDefaultAddress ? (session?.user as any)?.address : formData.get('pickupAddress') as string)
+    formData.append('supplierId', (session?.user as any)?.id)
 
     try {
       const response = await fetch('/api/dishes', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
+        body: formData
       })
 
       if (response.ok) {
@@ -121,8 +86,8 @@ export default function AddDishe() {
           <Label>Type</Label>
           <RadioGroup defaultValue='VEG' name='type'>
             <div className='flex items-center space-x-2'>
-              <RadioGroupItem value='VEG' id='veg' />
-              <Label htmlFor='veg'>Vegetarian</Label>
+              <RadioGroupItem value='VEG' id='veg' className="text-green-500 border-green-500" />
+              <Label htmlFor='veg' className="text-green-700">Vegetarian</Label>
             </div>
             <div className='flex items-center space-x-2'>
               <RadioGroupItem value='NON_VEG' id='non-veg' />
@@ -144,16 +109,7 @@ export default function AddDishe() {
             type='file'
             accept='image/jpeg,image/png'
             onChange={handleImageChange}
-            disabled={isUploadingImage}
           />
-          {isUploadingImage && (
-            <p className='text-sm text-gray-500'>Uploading image...</p>
-          )}
-          {imageUrl && (
-            <p className='text-sm text-green-500'>
-              Image uploaded successfully
-            </p>
-          )}
         </div>
 
         <div className='space-y-2'>
@@ -179,7 +135,7 @@ export default function AddDishe() {
         <Button
           type='submit'
           className='w-full bg-green-500 text-white hover:bg-green-600'
-          disabled={isSubmitting || isUploadingImage}
+          disabled={isSubmitting}
         >
           {isSubmitting ? 'Adding...' : 'Add Dish'}
         </Button>
