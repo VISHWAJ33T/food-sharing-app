@@ -64,7 +64,7 @@ export default function Feed() {
   const handleClaimRequest = async (id: string) => {
     try {
       const response = await fetch(`/api/dishes/${id}/claim`, {
-        method: 'POST',
+        method: 'POST'
       })
       if (response.ok) {
         toast({ title: 'Claim request sent successfully' })
@@ -79,49 +79,70 @@ export default function Feed() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-100 to-green-200 p-4">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-green-800 mb-6">Available Dishes</h1>
-        <div className="flex items-center space-x-2 mb-4">
+    <div className='min-h-screen bg-gradient-to-b from-green-100 to-green-200 p-4'>
+      <div className='mx-auto max-w-4xl'>
+        <h1 className='mb-6 text-3xl font-bold text-green-800'>
+          Available Dishes
+        </h1>
+        <div className='mb-4 flex items-center space-x-2'>
           <Switch
-            id="show-non-veg"
+            id='show-non-veg'
             checked={showNonVeg}
             onCheckedChange={setShowNonVeg}
           />
-          <Label htmlFor="show-non-veg">Show Non-Vegetarian Dishes</Label>
+          <Label htmlFor='show-non-veg'>Show Non-Vegetarian Dishes</Label>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {dishes.map((dish) => (
-            <div key={dish?.id} className="bg-white rounded-lg shadow-md p-4">
+        <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
+          {dishes.map(dish => (
+            <div key={dish?.id} className='rounded-lg bg-white p-4 shadow-md'>
               {dish?.imageUrl && (
-                <img src={dish?.imageUrl} alt={dish?.name} className="w-full h-48 object-cover rounded-md mb-2" />
+                <img
+                  src={dish?.imageUrl}
+                  alt={dish?.name}
+                  className='mb-2 h-48 w-full rounded-md object-cover'
+                />
               )}
-              <h2 className="text-xl font-semibold mb-2">{dish?.name}</h2>
-              <p className="text-gray-600 mb-2">Servings: {dish?.servings}</p>
-              <p className="text-gray-600 mb-2">Type: {dish?.type}</p>
-              <p className="text-gray-600 mb-2">Supplier: {dish?.supplier.name}</p>
-              <p className="text-gray-600 mb-4">{dish?.description}</p>
-              <div className="flex space-x-2">
+              <h2 className='mb-2 text-xl font-semibold'>{dish?.name}</h2>
+              <p className='mb-2 text-gray-600'>Servings: {dish?.servings}</p>
+              <p className='mb-2 text-gray-600'>Type: {dish?.type}</p>
+              <p className='mb-2 text-gray-600'>
+                Supplier: {dish?.supplier.name}
+              </p>
+              <p className='mb-4 text-gray-600'>{dish?.description}</p>
+              <div className='flex space-x-2'>
                 <Link href={`/dish/${dish?.id}`} passHref>
-                  <Button className="flex-1">View Details</Button>
+                  <Button className='flex-1'>View Details</Button>
                 </Link>
-                {session && !dish?.claimed && dish?.supplier.id !== (session?.user as any)?.id && (
-                  dish?.claimRequests?.some(request => request?.userId === (session?.user as any)?.id && request?.status === 'PENDING') ? (
-                    <p className="text-yellow-600 font-semibold flex items-center">Claim request pending</p>
+                {session &&
+                  !dish?.claimed &&
+                  dish?.supplier.id !== (session?.user as any)?.id &&
+                  (dish?.claimRequests?.some(
+                    request =>
+                      request?.userId === (session?.user as any)?.id &&
+                      request?.status === 'PENDING'
+                  ) ? (
+                    <p className='flex items-center font-semibold text-yellow-600'>
+                      Claim request pending
+                    </p>
                   ) : (
-                    <Button onClick={() => handleClaimRequest(dish?.id)} className="flex-1">
+                    <Button
+                      onClick={() => handleClaimRequest(dish?.id)}
+                      className='flex-1'
+                    >
                       Request to Claim
                     </Button>
-                  )
-                )}
-                {session && dish?.supplier?.id === (session?.user as any)?.id && (
-                  <Link href={`/manage-claim/${dish?.id}`} passHref>
-                    <Button className="flex-1">Manage Claims</Button>
-                  </Link>
-                )}
+                  ))}
+                {session &&
+                  dish?.supplier?.id === (session?.user as any)?.id && (
+                    <Link href={`/manage-claim/${dish?.id}`} passHref>
+                      <Button className='flex-1'>Manage Claims</Button>
+                    </Link>
+                  )}
               </div>
               {dish?.claimed && (
-                <p className="text-red-600 font-semibold mt-2">This dish has been claimed</p>
+                <p className='mt-2 font-semibold text-red-600'>
+                  This dish has been claimed
+                </p>
               )}
             </div>
           ))}

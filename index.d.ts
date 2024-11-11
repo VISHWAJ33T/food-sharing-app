@@ -1,2 +1,2 @@
-declare module 'Injector';
-declare module 'bcrypt';
+declare module 'Injector'
+declare module 'bcrypt'

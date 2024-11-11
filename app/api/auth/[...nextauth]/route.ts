@@ -38,19 +38,19 @@ export const authOptions = {
         session.user = {
           id: token?.id,
           userType: token?.userType,
-          address: token?.address,
-        };
+          address: token?.address
+        }
       }
-      return session;
+      return session
     },
     async jwt({ token, user, account, profile, isNewUser }: any) {
       //console.log('jwt', user, account, profile, isNewUser)
       if (user) {
-        token.id = user.id;
-        token.userType = user.userType;
+        token.id = user.id
+        token.userType = user.userType
       }
-      return token;
-    },
+      return token
+    }
   },
   pages: {
     signIn: '/login'

@@ -40,7 +40,12 @@ export default function AddDish() {
     if (imageFile) {
       formData.append('image', imageFile)
     }
-    formData.append('pickupAddress', useDefaultAddress ? (session?.user as any)?.address : formData.get('pickupAddress') as string)
+    formData.append(
+      'pickupAddress',
+      useDefaultAddress
+        ? (session?.user as any)?.address
+        : (formData.get('pickupAddress') as string)
+    )
     formData.append('supplierId', (session?.user as any)?.id)
 
     try {
@@ -86,8 +91,14 @@ export default function AddDish() {
           <Label>Type</Label>
           <RadioGroup defaultValue='VEG' name='type'>
             <div className='flex items-center space-x-2'>
-              <RadioGroupItem value='VEG' id='veg' className="text-green-500 border-green-500" />
-              <Label htmlFor='veg' className="text-green-700">Vegetarian</Label>
+              <RadioGroupItem
+                value='VEG'
+                id='veg'
+                className='border-green-500 text-green-500'
+              />
+              <Label htmlFor='veg' className='text-green-700'>
+                Vegetarian
+              </Label>
             </div>
             <div className='flex items-center space-x-2'>
               <RadioGroupItem value='NON_VEG' id='non-veg' />

@@ -54,7 +54,7 @@ export default function DishDetails({ params }: { params: { id: string } }) {
   const handleClaimRequest = async () => {
     try {
       const response = await fetch(`/api/dishes/${params?.id}/claim`, {
-        method: 'POST',
+        method: 'POST'
       })
       if (response.ok) {
         toast({ title: 'Claim request sent successfully' })
@@ -69,41 +69,57 @@ export default function DishDetails({ params }: { params: { id: string } }) {
   }
 
   if (!dish) {
-    return <div className="p-4">Loading...</div>
+    return <div className='p-4'>Loading...</div>
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-100 to-green-200 p-4">
-      <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-3xl font-bold text-green-800 mb-4">{dish?.name}</h1>
+    <div className='min-h-screen bg-gradient-to-b from-green-100 to-green-200 p-4'>
+      <div className='mx-auto max-w-2xl rounded-lg bg-white p-6 shadow-md'>
+        <h1 className='mb-4 text-3xl font-bold text-green-800'>{dish?.name}</h1>
         {dish?.imageUrl && (
-          <img src={dish?.imageUrl} alt={dish?.name} className="w-full h-64 object-cover rounded-md mb-4" />
+          <img
+            src={dish?.imageUrl}
+            alt={dish?.name}
+            className='mb-4 h-64 w-full rounded-md object-cover'
+          />
         )}
-        <p className="text-gray-600 mb-2">Servings: {dish?.servings}</p>
-        <p className="text-gray-600 mb-2">Type: {dish?.type}</p>
-        <p className="text-gray-600 mb-4">{dish?.description}</p>
-        <h2 className="text-xl font-semibold mb-2">Supplier Information</h2>
-        <p className="text-gray-600 mb-2">Name: {dish?.supplier.name}</p>
-        <p className="text-gray-600 mb-2">Phone: {dish?.supplier.phone}</p>
-        <p className="text-gray-600 mb-4">Address: {dish?.supplier.address}</p>
-        {session && !dish?.claimed && dish?.supplier?.id !== (session?.user as any)?.id && (
-          dish?.claimRequests?.some(request => request?.userId === (session?.user as any)?.id && request.status === 'PENDING') ? (
-            <p className="text-yellow-600 font-semibold">Claim request pending</p>
+        <p className='mb-2 text-gray-600'>Servings: {dish?.servings}</p>
+        <p className='mb-2 text-gray-600'>Type: {dish?.type}</p>
+        <p className='mb-4 text-gray-600'>{dish?.description}</p>
+        <h2 className='mb-2 text-xl font-semibold'>Supplier Information</h2>
+        <p className='mb-2 text-gray-600'>Name: {dish?.supplier.name}</p>
+        <p className='mb-2 text-gray-600'>Phone: {dish?.supplier.phone}</p>
+        <p className='mb-4 text-gray-600'>Address: {dish?.supplier.address}</p>
+        {session &&
+          !dish?.claimed &&
+          dish?.supplier?.id !== (session?.user as any)?.id &&
+          (dish?.claimRequests?.some(
+            request =>
+              request?.userId === (session?.user as any)?.id &&
+              request.status === 'PENDING'
+          ) ? (
+            <p className='font-semibold text-yellow-600'>
+              Claim request pending
+            </p>
           ) : (
-            <Button onClick={handleClaimRequest} className="w-full mb-2">
+            <Button onClick={handleClaimRequest} className='mb-2 w-full'>
               Request to Claim
             </Button>
-          )
-        )}
+          ))}
         {session && dish?.supplier.id === (session.user as any).id && (
-          <Button onClick={() => router.push(`/manage-claim/${dish?.id}`)} className="w-full mb-2">
+          <Button
+            onClick={() => router.push(`/manage-claim/${dish?.id}`)}
+            className='mb-2 w-full'
+          >
             Manage Claims
           </Button>
         )}
         {dish?.claimed && (
-          <p className="text-red-600 font-semibold">This dish has been claimed</p>
+          <p className='font-semibold text-red-600'>
+            This dish has been claimed
+          </p>
         )}
-        <Button onClick={() => router.push('/feed')} className="w-full mt-4">
+        <Button onClick={() => router.push('/feed')} className='mt-4 w-full'>
           Back to Feed
         </Button>
       </div>

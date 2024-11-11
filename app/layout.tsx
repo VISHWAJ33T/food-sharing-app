@@ -22,7 +22,7 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: 'Food Sharing App',
-  description: 'A food sharing app built with Next.js',
+  description: 'A food sharing app built with Next.js'
 }
 
 export default function RootLayout({
@@ -60,8 +60,8 @@ export default function RootLayout({
           </MUIThemeRegistry>
         </NextAuthProvider>
         <Script
-          id="register-sw"
-          strategy="afterInteractive"
+          id='register-sw'
+          strategy='afterInteractive'
           dangerouslySetInnerHTML={{
             __html: `
               if ('serviceWorker' in navigator) {
@@ -69,7 +69,7 @@ export default function RootLayout({
                   navigator.serviceWorker.register('/sw.js');
                 });
               }
-            `,
+            `
           }}
         />
       </body>

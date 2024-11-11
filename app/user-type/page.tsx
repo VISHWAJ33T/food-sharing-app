@@ -3,9 +3,15 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { toast } from "@/hooks/use-toast"
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card'
+import { toast } from '@/hooks/use-toast'
 
 export default function UserTypeSelection() {
   const [isLoading, setIsLoading] = useState(false)
@@ -18,7 +24,7 @@ export default function UserTypeSelection() {
       const response = await fetch('/api/user/type', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userType: type }),
+        body: JSON.stringify({ userType: type })
       })
 
       if (response.ok) {
@@ -28,30 +34,38 @@ export default function UserTypeSelection() {
       } else {
         throw new Error('Failed to update user type')
       }
-    } catch (error:any) {
-      toast({ title: "Error updating user type", description: error.message, variant: "destructive" })
+    } catch (error: any) {
+      toast({
+        title: 'Error updating user type',
+        description: error.message,
+        variant: 'destructive'
+      })
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-100 to-green-200 flex flex-col items-center justify-center p-4">
-      <Card className="w-full max-w-md">
+    <div className='flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-green-100 to-green-200 p-4'>
+      <Card className='w-full max-w-md'>
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center text-green-800">Select User Type</CardTitle>
-          <CardDescription className="text-center">Are you a food supplier or a food seeker?</CardDescription>
+          <CardTitle className='text-center text-2xl font-bold text-green-800'>
+            Select User Type
+          </CardTitle>
+          <CardDescription className='text-center'>
+            Are you a food supplier or a food seeker?
+          </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className='space-y-4'>
           <Button
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white"
+            className='w-full bg-orange-500 text-white hover:bg-orange-600'
             onClick={() => handleSelection('SUPPLIER')}
             disabled={isLoading}
           >
             Food Supplier
           </Button>
           <Button
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white"
+            className='w-full bg-blue-500 text-white hover:bg-blue-600'
             onClick={() => handleSelection('SEEKER')}
             disabled={isLoading}
           >

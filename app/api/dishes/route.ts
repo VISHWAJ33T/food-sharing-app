@@ -68,10 +68,12 @@ export async function POST(request: Request) {
       const arrayBuffer = await image.arrayBuffer()
       const buffer = Buffer.from(arrayBuffer)
       const result = await new Promise((resolve, reject) => {
-        cloudinary.uploader.upload_stream((error, result) => {
-          if (error) reject(error)
-          else resolve(result)
-        }).end(buffer)
+        cloudinary.uploader
+          .upload_stream((error, result) => {
+            if (error) reject(error)
+            else resolve(result)
+          })
+          .end(buffer)
       })
       imageUrl = (result as any).secure_url
     }

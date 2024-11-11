@@ -13,13 +13,16 @@ export async function GET() {
   try {
     const dishes = await prisma.dish.findMany({
       where: {
-        supplierId: session.user.id,
-      },
+        supplierId: session.user.id
+      }
     })
 
     return NextResponse.json(dishes)
   } catch (error) {
     console.error('Error fetching dishes:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    )
   }
 }

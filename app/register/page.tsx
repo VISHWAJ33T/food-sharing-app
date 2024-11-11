@@ -103,10 +103,10 @@ export default function Register() {
             {isLoading ? 'Registering...' : 'Register'}
           </Button>
         </form>
-        <div className="mt-4 text-center">
-          <p className="text-sm text-gray-600">
+        <div className='mt-4 text-center'>
+          <p className='text-sm text-gray-600'>
             Already have an account?{' '}
-            <Link href="/login" className="text-green-600 hover:underline">
+            <Link href='/login' className='text-green-600 hover:underline'>
               Login here
             </Link>
           </p>

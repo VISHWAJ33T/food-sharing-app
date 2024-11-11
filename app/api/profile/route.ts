@@ -13,7 +13,7 @@ export async function GET() {
   try {
     const user = await prisma.user.findUnique({
       where: { id: session.user.id },
-      select: { name: true, email: true, address: true, phone: true },
+      select: { name: true, email: true, address: true, phone: true }
     })
 
     if (!user) {
@@ -23,7 +23,10 @@ export async function GET() {
     return NextResponse.json(user)
   } catch (error) {
     console.error('Error fetching profile:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    )
   }
 }
 
@@ -42,13 +45,16 @@ export async function PUT(request: Request) {
         name: body.name,
         email: body.email,
         address: body.address,
-        phone: body.phone,
-      },
+        phone: body.phone
+      }
     })
 
     return NextResponse.json(updatedUser)
   } catch (error) {
     console.error('Error updating profile:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    )
   }
 }

@@ -35,7 +35,7 @@ export async function GET(
             }
           }
         }
-      },
+      }
     })
 
     if (!dish) {
@@ -45,7 +45,10 @@ export async function GET(
     return NextResponse.json(dish)
   } catch (error) {
     console.error('Error fetching dish:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    )
   }
 }
 
@@ -61,7 +64,7 @@ export async function PUT(
 
   try {
     const dish = await prisma.dish.findUnique({
-      where: { id: params.id },
+      where: { id: params.id }
     })
 
     if (!dish) {
@@ -84,10 +87,12 @@ export async function PUT(
       const arrayBuffer = await image.arrayBuffer()
       const buffer = Buffer.from(arrayBuffer)
       const result = await new Promise((resolve, reject) => {
-        cloudinary.uploader.upload_stream((error, result) => {
-          if (error) reject(error)
-          else resolve(result)
-        }).end(buffer)
+        cloudinary.uploader
+          .upload_stream((error, result) => {
+            if (error) reject(error)
+            else resolve(result)
+          })
+          .end(buffer)
       })
       imageUrl = (result as any).secure_url
     }
@@ -99,14 +104,17 @@ export async function PUT(
         servings,
         type,
         description,
-        imageUrl,
-      },
+        imageUrl
+      }
     })
 
     return NextResponse.json(updatedDish)
   } catch (error) {
     console.error('Error updating dish:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    )
   }
 }
 
@@ -122,7 +130,7 @@ export async function DELETE(
 
   try {
     const dish = await prisma.dish.findUnique({
-      where: { id: params.id },
+      where: { id: params.id }
     })
 
     if (!dish) {
@@ -134,12 +142,15 @@ export async function DELETE(
     }
 
     await prisma.dish.delete({
-      where: { id: params.id },
+      where: { id: params.id }
     })
 
     return NextResponse.json({ message: 'Dish deleted successfully' })
   } catch (error) {
     console.error('Error deleting dish:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    )
   }
 }

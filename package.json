@@ -6,8 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "postinstall": "prisma generate",
     "lint": "next lint",
-    "postinstall": "prisma generate"
+    "lint:fix": "next lint --fix",
+    "check-types": "tsc --noEmit --pretty",
+    "prettier:format": "prettier --write .",
+    "prettier:check": "prettier --check \"**/*.{ts,tsx,json}\""
   },
   "dependencies": {
     "@emotion/cache": "^11.13.1",
