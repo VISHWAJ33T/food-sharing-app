@@ -37,6 +37,7 @@ model Dish {
   description   String?
   imageUrl      String?
   pickupAddress String
+  claimed       Boolean
   supplier      User     @relation(fields: [supplierId], references: [id])
   supplierId    String   @db.ObjectId
 }
