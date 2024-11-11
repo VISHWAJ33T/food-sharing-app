@@ -1,5 +1,8 @@
+.yarn
 .next
 .cache
+dist
+package.json
 package-lock.json
 public
 node_modules
