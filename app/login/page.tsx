@@ -1,9 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { signIn } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -12,6 +12,13 @@ import { toast } from "@/hooks/use-toast"
 export default function Login() {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const { data: session, status } = useSession()
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      router.push('/feed')
+    }
+  }, [status, router])
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -31,13 +38,21 @@ export default function Login() {
       if (result?.error) {
         toast({ title: "Login failed", description: "Invalid username or password", variant: "destructive" })
       } else {
-        router.push('/user-type')
+        router.push('/feed')
       }
     } catch (error) {
       toast({ title: "An error occurred", description: "Please try again later", variant: "destructive" })
     } finally {
       setIsLoading(false)
     }
+  }
+
+  if (status === 'loading') {
+    return <div>Loading...</div>
+  }
+
+  if (status === 'authenticated') {
+    return null
   }
 
   return (
@@ -57,6 +72,14 @@ export default function Login() {
             {isLoading ? 'Logging in...' : 'Login'}
           </Button>
         </form>
+        <div className="mt-4 text-center">
+          <p className="text-sm text-gray-600">
+            Don't have an account?{' '}
+            <Link href="/register" className="text-green-600 hover:underline">
+              Register here
+            </Link>
+          </p>
+        </div>
         <div className="mt-4 text-center">
           <Link href="/" className="text-green-600 hover:underline">
             Back to Home
