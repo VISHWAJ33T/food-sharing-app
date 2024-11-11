@@ -1,6 +1,6 @@
-import NextAuth from 'next-auth'
-import CredentialsProvider from 'next-auth/providers/credentials'
-import { prisma } from '@/prisma/prisma'
+import NextAuth from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import { prisma } from '@/prisma/prisma';
 
 export const authOptions = {
   providers: [
@@ -8,29 +8,29 @@ export const authOptions = {
       name: 'Credentials',
       credentials: {
         username: { label: 'Username', type: 'text' },
-        password: { label: 'Password', type: 'password' }
+        password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
         if (!credentials?.username || !credentials?.password) {
-          return null
+          return null;
         }
 
         const user = await prisma.user.findUnique({
-          where: { username: credentials.username }
-        })
+          where: { username: credentials.username },
+        });
 
         if (!user || user.password !== credentials.password) {
-          return null
+          return null;
         }
 
         return {
           id: user.id,
           name: user.name,
           email: user.email,
-          userType: user.userType
-        }
-      }
-    })
+          userType: user.userType,
+        };
+      },
+    }),
   ],
   callbacks: {
     async session({ session, user, token }: any) {
@@ -38,25 +38,25 @@ export const authOptions = {
         session.user = {
           id: token?.id,
           userType: token?.userType,
-          address: token?.address
-        }
+          address: token?.address,
+        };
       }
-      return session
+      return session;
     },
     async jwt({ token, user, account, profile, isNewUser }: any) {
       //console.log('jwt', user, account, profile, isNewUser)
       if (user) {
-        token.id = user.id
-        token.userType = user.userType
+        token.id = user.id;
+        token.userType = user.userType;
       }
-      return token
-    }
+      return token;
+    },
   },
   pages: {
-    signIn: '/login'
-  }
-}
+    signIn: '/login',
+  },
+};
 
-const handler = NextAuth(authOptions)
+const handler = NextAuth(authOptions);
 
-export { handler as GET, handler as POST }
+export { handler as GET, handler as POST };

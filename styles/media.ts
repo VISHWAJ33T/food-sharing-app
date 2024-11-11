@@ -1,17 +1,17 @@
 const getMediaQuery = (maxWidth: number) => {
-  return `@media (max-width: ${maxWidth}px)`
-}
+  return `@media (max-width: ${maxWidth}px)`;
+};
 
 const getGreaterMediaQuery = (maxWidth: number) => {
-  return `@media (min-width: ${maxWidth}px)`
-}
+  return `@media (min-width: ${maxWidth}px)`;
+};
 
 export const breakpoints = {
   largeMobile: 480,
   tablet: 768,
   laptop: 1024,
-  largeLaptop: 1280
-}
+  largeLaptop: 1280,
+};
 
 const media = {
   custom: getMediaQuery,
@@ -20,7 +20,7 @@ const media = {
   tablet: getMediaQuery(breakpoints.tablet),
   laptop: getMediaQuery(breakpoints.laptop),
   largeLaptop: getMediaQuery(breakpoints.largeLaptop),
-  moreTablet: getGreaterMediaQuery(breakpoints.tablet)
-}
+  moreTablet: getGreaterMediaQuery(breakpoints.tablet),
+};
 
-export default media
+export default media;

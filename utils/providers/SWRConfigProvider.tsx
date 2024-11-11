@@ -1,21 +1,21 @@
-'use client'
+'use client';
 
-import { SWRConfig } from 'swr'
-import { defaultFetcher } from '../fetchers'
+import { SWRConfig } from 'swr';
+import { defaultFetcher } from '../fetchers';
 
 export const SWRConfigProvider = ({
-  children
+  children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) => {
   return (
     <SWRConfig
       value={{
         refreshInterval: 3000,
-        fetcher: defaultFetcher
+        fetcher: defaultFetcher,
       }}
     >
       {children}
     </SWRConfig>
-  )
-}
+  );
+};

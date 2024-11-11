@@ -1,119 +1,123 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { useSession } from 'next-auth/react'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Button } from '@/components/ui/button'
-import { toast } from '@/hooks/use-toast'
+import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { toast } from '@/hooks/use-toast';
 
 interface UserProfile {
-  name: string
-  email: string
-  address: string
-  phone: string
+  name: string;
+  email: string;
+  address: string;
+  phone: string;
 }
 
 export default function Profile() {
-  const [profile, setProfile] = useState<UserProfile | null>(null)
-  const { data: session } = useSession()
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const { data: session } = useSession();
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await fetch('/api/profile')
+        const response = await fetch('/api/profile');
         if (response.ok) {
-          const data = await response.json()
-          setProfile(data)
+          const data = await response.json();
+          setProfile(data);
         } else {
-          throw new Error('Failed to fetch profile')
+          throw new Error('Failed to fetch profile');
         }
       } catch (error) {
-        console.error('Error fetching profile:', error)
-        toast({ title: 'Failed to fetch profile', variant: 'destructive' })
+        console.error('Error fetching profile:', error);
+        toast({ title: 'Failed to fetch profile', variant: 'destructive' });
       }
-    }
+    };
 
     if (session?.user) {
-      fetchProfile()
+      fetchProfile();
     }
-  }, [session])
+  }, [session]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (!profile) return
+    e.preventDefault();
+    if (!profile) return;
 
     try {
       const response = await fetch('/api/profile', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(profile)
-      })
+        body: JSON.stringify(profile),
+      });
 
       if (response.ok) {
-        toast({ title: 'Profile updated successfully' })
+        toast({ title: 'Profile updated successfully' });
       } else {
-        throw new Error('Failed to update profile')
+        throw new Error('Failed to update profile');
       }
     } catch (error) {
-      console.error('Error updating profile:', error)
-      toast({ title: 'Failed to update profile', variant: 'destructive' })
+      console.error('Error updating profile:', error);
+      toast({ title: 'Failed to update profile', variant: 'destructive' });
     }
-  }
+  };
 
   if (!profile) {
-    return <div className='p-4'>Loading...</div>
+    return <div className="p-4">Loading...</div>;
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-b from-green-100 to-green-200 p-4'>
-      <div className='mx-auto max-w-md rounded-lg bg-white p-6 shadow-md'>
-        <h1 className='mb-4 text-2xl font-bold'>My Profile</h1>
-        <form onSubmit={handleSubmit} className='space-y-4'>
+    <div className="min-h-screen bg-gradient-to-b from-green-100 to-green-200 p-4">
+      <div className="mx-auto max-w-md rounded-lg bg-white p-6 shadow-md">
+        <h1 className="mb-4 text-2xl font-bold">My Profile</h1>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor='name'>Name</Label>
+            <Label htmlFor="name">Name</Label>
             <Input
-              id='name'
+              id="name"
               value={profile.name}
-              onChange={e => setProfile({ ...profile, name: e.target.value })}
+              onChange={(e) => setProfile({ ...profile, name: e.target.value })}
               required
             />
           </div>
           <div>
-            <Label htmlFor='email'>Email</Label>
+            <Label htmlFor="email">Email</Label>
             <Input
-              id='email'
-              type='email'
+              id="email"
+              type="email"
               value={profile.email}
-              onChange={e => setProfile({ ...profile, email: e.target.value })}
+              onChange={(e) =>
+                setProfile({ ...profile, email: e.target.value })
+              }
               required
             />
           </div>
           <div>
-            <Label htmlFor='address'>Address</Label>
+            <Label htmlFor="address">Address</Label>
             <Input
-              id='address'
+              id="address"
               value={profile.address}
-              onChange={e =>
+              onChange={(e) =>
                 setProfile({ ...profile, address: e.target.value })
               }
               required
             />
           </div>
           <div>
-            <Label htmlFor='phone'>Phone</Label>
+            <Label htmlFor="phone">Phone</Label>
             <Input
-              id='phone'
+              id="phone"
               value={profile.phone}
-              onChange={e => setProfile({ ...profile, phone: e.target.value })}
+              onChange={(e) =>
+                setProfile({ ...profile, phone: e.target.value })
+              }
               required
             />
           </div>
-          <Button type='submit' className='w-full'>
+          <Button type="submit" className="w-full">
             Update Profile
           </Button>
         </form>
       </div>
     </div>
-  )
+  );
 }

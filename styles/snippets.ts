@@ -1,5 +1,5 @@
-import theme from '@/styles/theme'
-import media from '@/styles/media'
+import theme from '@/styles/theme';
+import media from '@/styles/media';
 
 export const SingleLine = `
 line-height: 1.15;
@@ -7,21 +7,21 @@ max-height: 1.15;
 white-space: nowrap;
 overflow: hidden;
 text-overflow: ellipsis;
-`
+`;
 
 export const MutedText = `
   opacity: 0.5;
-`
+`;
 
 export const CapsText = `
   text-transform: uppercase;
   letter-spacing: 0.1em;
-`
+`;
 
 export const CleanAnchor = `
     text-decoration: none !important;
     outline: none !important;
-`
+`;
 
 export const VerticalScrollBar = `
   scrollbar-width: 10px;
@@ -39,7 +39,7 @@ export const VerticalScrollBar = `
     background-color: ${theme.colors.primary};
     outline: 1px solid slategrey;
   }
-`
+`;
 
 export const HorizontalScrollBar = `
   scrollbar-width: 10px;
@@ -57,7 +57,7 @@ export const HorizontalScrollBar = `
     background-color: ${theme.colors.primary};;
     outline: 1px solid slategrey;
   }
-`
+`;
 
 export const HorizontalMiniScrollBar = (color: string) => `
   scrollbar-width: 10px;
@@ -78,14 +78,14 @@ export const HorizontalMiniScrollBar = (color: string) => `
       background-color: ${(props: any) => color || props.theme.colors.textGrey};
     }
   }
-`
+`;
 
 export const FontBgGradient = (opacity = 1) => `
 background-image: linear-gradient(to right, rgba(107, 1, 185,${opacity}), rgba(186, 3, 168,${opacity}) , rgba(246, 100, 14,${opacity}));
-`
+`;
 
 export const FonTextGradient = (opacity = 1) => `
   background-image: -webkit-linear-gradient(rgba(107, 1, 185,${opacity}), rgba(186, 3, 168,${opacity}) , rgba(246, 100, 14,${opacity}));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-`
+`;

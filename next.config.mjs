@@ -2,12 +2,12 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['images.unsplash.com', 'res.cloudinary.com']
+    domains: ['images.unsplash.com', 'res.cloudinary.com'],
   },
   eslint: {
     // Warning: This allows production builds to successfully complete even if
     // your project has ESLint errors.
-    ignoreDuringBuilds: true
+    ignoreDuringBuilds: true,
   },
   async headers() {
     return [
@@ -16,12 +16,12 @@ const nextConfig = {
         headers: [
           {
             key: 'X-Frame-Options',
-            value: 'DENY'
-          }
-        ]
-      }
-    ]
-  }
-}
+            value: 'DENY',
+          },
+        ],
+      },
+    ];
+  },
+};
 
-export default nextConfig
+export default nextConfig;

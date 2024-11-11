@@ -1,4 +1,4 @@
-import { DM_Sans } from 'next/font/google'
+import { DM_Sans } from 'next/font/google';
 
 export const dmSans = DM_Sans({
   subsets: ['latin'],
@@ -6,5 +6,5 @@ export const dmSans = DM_Sans({
   variable: '--font-dm-sans',
   preload: true,
   adjustFontFallback: true,
-  fallback: ['Segoe UI', 'system-ui', 'Arial', 'Helvetica Neue', 'sans-serif']
-})
+  fallback: ['Segoe UI', 'system-ui', 'Arial', 'Helvetica Neue', 'sans-serif'],
+});

@@ -1,4 +1,4 @@
-import createCache from '@emotion/cache'
+import createCache from '@emotion/cache';
 // import createEmotionServer from "@emotion/server/create-instance";
 // import { cache } from "@emotion/css";
 
@@ -17,7 +17,7 @@ import createCache from '@emotion/cache'
 // It allows developers to easily override MUI styles with other styling solutions, like CSS modules.
 export default function createEmotionCache() {
   return createCache({
-    key: 'css'
+    key: 'css',
     //, prepend: true
-  })
+  });
 }
