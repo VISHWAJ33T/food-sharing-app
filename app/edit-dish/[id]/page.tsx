@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
+import Image from 'next/image'
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -21,6 +22,8 @@ interface Dish {
 
 export default function EditDish({ params }: { params: { id: string } }) {
   const [dish, setDish] = useState<Dish | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [imageFile, setImageFile] = useState<File | null>(null)
   const router = useRouter()
   const { data: session } = useSession()
 
@@ -48,12 +51,21 @@ export default function EditDish({ params }: { params: { id: string } }) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!dish) return
+    setIsLoading(true)
+
+    const formData = new FormData()
+    formData.append('name', dish?.name)
+    formData.append('servings', dish?.servings.toString())
+    formData.append('type', dish?.type)
+    formData.append('description', dish?.description)
+    if (imageFile) {
+      formData.append('image', imageFile)
+    }
 
     try {
       const response = await fetch(`/api/dishes/${params.id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(dish),
+        body: formData,
       })
 
       if (response.ok) {
@@ -65,6 +77,14 @@ export default function EditDish({ params }: { params: { id: string } }) {
     } catch (error) {
       console.error('Error updating dish:', error)
       toast({ title: "Failed to update dish", variant: "destructive" })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setImageFile(e.target.files[0])
     }
   }
 
@@ -81,7 +101,7 @@ export default function EditDish({ params }: { params: { id: string } }) {
             <Label htmlFor="name">Dish Name</Label>
             <Input
               id="name"
-              value={dish.name}
+              value={dish?.name}
               onChange={(e) => setDish({ ...dish, name: e.target.value })}
               required
             />
@@ -91,7 +111,7 @@ export default function EditDish({ params }: { params: { id: string } }) {
             <Input
               id="servings"
               type="number"
-              value={dish.servings}
+              value={dish?.servings}
               onChange={(e) => setDish({ ...dish, servings: parseInt(e.target.value) })}
               required
             />
@@ -99,12 +119,12 @@ export default function EditDish({ params }: { params: { id: string } }) {
           <div>
             <Label>Type</Label>
             <RadioGroup
-              value={dish.type}
+              value={dish?.type}
               onValueChange={(value) => setDish({ ...dish, type: value as 'VEG' | 'NON_VEG' })}
             >
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="VEG" id="veg" />
-                <Label htmlFor="veg">Vegetarian</Label>
+                <RadioGroupItem value="VEG" id="veg" className="text-green-500 border-green-500" />
+                <Label htmlFor="veg" className="text-green-700">Vegetarian</Label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="NON_VEG" id="non-veg" />
@@ -116,12 +136,29 @@ export default function EditDish({ params }: { params: { id: string } }) {
             <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
-              value={dish.description}
+              value={dish?.description}
               onChange={(e) => setDish({ ...dish, description: e.target.value })}
               required
             />
           </div>
-          <Button type="submit" className="w-full">Update Dish</Button>
+          <div>
+            <Label htmlFor="image">Dish Image</Label>
+            <Input
+              id="image"
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+            />
+          </div>
+          {dish?.imageUrl && (
+            <div className="mt-2">
+              <Label>Current Image</Label>
+              <Image src={dish?.imageUrl} alt="Current dish image" width={200} height={200} className="mt-1 rounded-md" />
+            </div>
+          )}
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? 'Updating...' : 'Update Dish'}
+          </Button>
         </form>
       </div>
     </div>
