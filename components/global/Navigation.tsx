@@ -45,13 +45,27 @@ export function Navigation() {
         </div>
       </nav>
 
-      {/* Mobile Navigation */}
+      {/* Mobile Bottom Navigation */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 flex justify-around bg-white p-2 shadow-md md:hidden">
+        {navItems.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className="flex flex-col items-center space-y-1 text-gray-600 hover:text-green-600"
+          >
+            <item.icon className="h-6 w-6" />
+            <span className="text-xs">{item.label}</span>
+          </Link>
+        ))}
+      </nav>
+
+      {/* Mobile Menu Button (now hidden) */}
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
           <Button
             variant="outline"
             size="icon"
-            className="fixed bottom-4 right-4 z-50 rounded-full md:hidden"
+            className="fixed bottom-4 right-4 z-50 hidden rounded-full"
           >
             <Menu className="h-6 w-6" />
           </Button>
