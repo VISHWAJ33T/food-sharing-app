@@ -3,7 +3,7 @@
     "short_name": "FoodShare",
     "description": "A platform for sharing excess food with those in need",
     "start_url": "/",
-    "display": "standalone",
+    "display": "fullscreen",
     "background_color": "#ffffff",
     "theme_color": "#4caf50",
     "icons": [
