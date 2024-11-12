@@ -29,21 +29,28 @@ interface Dish {
 
 export default function Feed() {
   const [dishes, setDishes] = useState<Dish[]>([]);
-  const [showNonVeg, setShowNonVeg] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('showNonVeg');
-      return saved !== null ? JSON.parse(saved) : true;
-    }
-    return true;
-  });
+  const [showNonVeg, setShowNonVeg] = useState(false);
   const { data: session } = useSession();
+
+  useEffect(() => {
+    setShowNonVeg(() => {
+      if (typeof window !== 'undefined') {
+        const storedValue = localStorage.getItem('showNonVeg');
+        return storedValue ? JSON.parse(storedValue) : false;
+      }
+    });
+  }, []);
+
+  const toggleShowNonVeg = (input: boolean) => {
+    setShowNonVeg(input);
+    localStorage.setItem('showNonVeg', JSON.stringify(input));
+  };
 
   useEffect(() => {
     fetchDishes();
   }, [showNonVeg]);
 
   useEffect(() => {
-    localStorage.setItem('showNonVeg', JSON.stringify(showNonVeg));
   }, [showNonVeg]);
 
   const fetchDishes = async () => {
@@ -88,7 +95,7 @@ export default function Feed() {
           <Switch
             id="show-non-veg"
             checked={showNonVeg}
-            onCheckedChange={setShowNonVeg}
+            onCheckedChange={toggleShowNonVeg}
           />
           <Label htmlFor="show-non-veg">Show Non-Vegetarian Dishes</Label>
         </div>
