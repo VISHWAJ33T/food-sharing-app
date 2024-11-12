@@ -87,26 +87,26 @@ export default function ManageClaim({ params }: { params: { id: string } }) {
         <h1 className="mb-6 text-3xl font-bold text-green-800">
           Manage Claims for {dish.name}
         </h1>
-        {dish.claimRequests.length === 0 ? (
+        {dish?.claimRequests?.length === 0 ? (
           <p>No pending claim requests for this dish.</p>
         ) : (
           <div className="space-y-4">
-            {dish.claimRequests.map((request) => (
+            {dish?.claimRequests.map((request) => (
               <div key={request.id} className="rounded-lg border p-4">
                 <p className="mb-2 text-gray-600">
-                  Requested by: {request.user.name}
+                  Requested by: {request?.user?.name}
                 </p>
-                <p className="mb-4 text-gray-600">Status: {request.status}</p>
-                {request.status === 'PENDING' && (
+                <p className="mb-4 text-gray-600">Status: {request?.status}</p>
+                {request?.status === 'PENDING' && (
                   <div className="flex space-x-2">
                     <Button
-                      onClick={() => handleClaimAction(request.id, 'APPROVED')}
+                      onClick={() => handleClaimAction(request?.id, 'APPROVED')}
                       className="bg-green-500 hover:bg-green-600"
                     >
                       Approve
                     </Button>
                     <Button
-                      onClick={() => handleClaimAction(request.id, 'REJECTED')}
+                      onClick={() => handleClaimAction(request?.id, 'REJECTED')}
                       className="bg-red-500 hover:bg-red-600"
                     >
                       Reject
@@ -118,7 +118,7 @@ export default function ManageClaim({ params }: { params: { id: string } }) {
           </div>
         )}
         <Button
-          onClick={() => router.push(`/dish/${params.id}`)}
+          onClick={() => router.push(`/dish/${params?.id}`)}
           className="mt-6 w-full"
         >
           Back to Dish Details
