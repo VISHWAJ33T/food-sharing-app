@@ -154,7 +154,7 @@ export default function MyDishes() {
                   Delete
                 </Button>
               </div>
-              {!dish.claimed && (
+              {/* {!dish.claimed && (
                 <Button
                   variant="secondary"
                   size="sm"
@@ -164,7 +164,7 @@ export default function MyDishes() {
                   <Check className="mr-2 h-4 w-4" />
                   Mark as Claimed
                 </Button>
-              )}
+              )} */}
             </CardContent>
           </Card>
         ))}
