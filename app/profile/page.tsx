@@ -6,12 +6,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
+import { signOut } from 'next-auth/react';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 
 interface UserProfile {
   name: string;
   email: string;
   address: string;
   phone: string;
+  userType: 'SUPPLIER' | 'SEEKER';
 }
 
 export default function Profile() {
@@ -113,8 +116,27 @@ export default function Profile() {
               required
             />
           </div>
+          <div>
+            <Label htmlFor="userType">User Type</Label>
+            <Select
+              value={profile.userType}
+              onValueChange={(value) => setProfile({ ...profile, userType: value as 'SUPPLIER' | 'SEEKER' })}
+              required
+            >
+              <SelectTrigger className="w-full p-2 border rounded">
+                <SelectValue placeholder="Select user type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="SUPPLIER">SUPPLIER</SelectItem>
+                <SelectItem value="SEEKER">SEEKER</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <Button type="submit" className="w-full">
             Update Profile
+          </Button>
+          <Button type="button" className="w-full" onClick={() => signOut()}>
+            Sign Out
           </Button>
         </form>
       </div>
